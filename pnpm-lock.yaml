@@ -17,6 +17,9 @@ importers:
       '@solana/web3.js':
         specifier: 1.98.4
         version: 1.98.4(bufferutil@4.1.0)(typescript@7.0.2)(utf-8-validate@6.0.6)
+      '@web3icons/react':
+        specifier: ^4.1.22
+        version: 4.1.22(react@19.3.0)
       assert:
         specifier: 2.1.0
         version: 2.1.0
@@ -513,6 +516,14 @@ packages:
     engines: {node: '>=16.20.0'}
     cpu: [x64]
     os: [win32]
+
+  '@web3icons/common@0.11.51':
+    resolution: {integrity: sha512-ZXaTW/P6ReLHmkYQcxP8OcPoUrSmgPlsFKVboiG/cVSIkz0mHNP1tIFhf9zPOQaQm20yqTc+uuNuXb2ywHzI1A==}
+
+  '@web3icons/react@4.1.22':
+    resolution: {integrity: sha512-GpcNQGKImC7UeVwI9U0HX++m0jb5WXYV18SSEkDMANQdcz1EzgboKQg2ZWg1G4TKVToguNBgrtDISo7Sx5rINw==}
+    peerDependencies:
+      react: ^18.0.0 || ^19.0.0
 
   aes-js@4.0.0-beta.5:
     resolution: {integrity: sha512-G965FqalsNyrPqgEGON7nIx1e/OVENSgiEIzyC63haUMuvNnwIgIjMs52hlTCKhkBny7A2ORNlfY9Zu+jmGk1Q==}
@@ -1729,6 +1740,13 @@ snapshots:
 
   '@typescript/typescript-win32-x64@7.0.2':
     optional: true
+
+  '@web3icons/common@0.11.51': {}
+
+  '@web3icons/react@4.1.22(react@19.3.0)':
+    dependencies:
+      '@web3icons/common': 0.11.51
+      react: 19.3.0
 
   aes-js@4.0.0-beta.5: {}
 

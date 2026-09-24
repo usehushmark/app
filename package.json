@@ -11,6 +11,7 @@
     "@lightprotocol/hasher.rs": "0.2.1",
     "@solana/spl-token": "0.4.14",
     "@solana/web3.js": "1.98.4",
+    "@web3icons/react": "^4.1.22",
     "assert": "2.1.0",
     "bs58": "6.0.0",
     "buffer": "6.0.3",

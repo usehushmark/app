@@ -3,8 +3,9 @@ import {fileURLToPath} from 'node:url';
 import {renderIcon} from './site-icons.mjs';
 import {FiArrowDown,FiArrowLeft,FiArrowRight,FiArrowUpRight,FiInfo,FiPlus,FiSearch} from 'react-icons/fi';
 import {SiX} from 'react-icons/si';
+import {TokenSOL,TokenUSDC} from '@web3icons/react';
 
-const icon=(Icon,className='site-icon')=>renderIcon(Icon,{className});
+const icon=(Icon,className='site-icon',props={})=>renderIcon(Icon,{...props,className});
 const arrowUp=icon(FiArrowUpRight);
 const arrowRight=icon(FiArrowRight);
 const arrowDown=icon(FiArrowDown);
@@ -13,6 +14,8 @@ const info=icon(FiInfo);
 const plus=icon(FiPlus);
 const search=icon(FiSearch);
 const xLink=`<a class="social-link" href="https://x.com/devhushmark" target="_blank" rel="noopener noreferrer" aria-label="Hushmark on X">${icon(SiX)}</a>`;
+const solIcon=icon(TokenSOL,'token-icon',{size:18});
+const usdcIcon=icon(TokenUSDC,'token-icon',{size:18});
 
 function enhanceIcons(html){
   return html
@@ -22,7 +25,7 @@ function enhanceIcons(html){
     .replaceAll(' ↓',` ${arrowDown}`)
     .replace('<span class="notice-icon">i</span>',`<span class="notice-icon">${info}</span>`)
     .replace('<summary>How private payments work <span aria-hidden="true">+</span></summary>',`<summary>How private payments work <span class="summary-icon" aria-hidden="true">${plus}</span></summary>`)
-    .replace('</nav><a class="header-cta"',`${xLink}</nav><a class="header-cta"`)
+    .replace('</nav><a class="header-cta"',`</nav>${xLink}<a class="header-cta"`)
     .replace('<p>An open world deserves a private layer.</p>',`<p>An open world deserves a private layer.</p>${xLink}`)
     .replace('</head>','<link rel="stylesheet" href="/site-layout.css"><script src="/site.js" defer></script></head>');
 }
@@ -31,6 +34,12 @@ function pageSearch(scope,label,links){
   return `<aside class="page-sidebar"><div class="sidebar-heading"><span class="eyebrow">ON THIS PAGE</span><span class="outline-tag">${label}</span></div><label class="page-search"><span aria-hidden="true">${search}</span><input type="search" data-search-input="${scope}" placeholder="Search ${scope}" aria-label="Search ${scope}"></label><nav class="page-nav" aria-label="${scope} sections">${links.map(([text,href])=>`<a href="${href}">${text}</a>`).join('')}</nav><p class="sidebar-hint">Search filters the content below without changing the original documentation.</p></aside>`;
 }
 
+function enhanceWallet(html){
+  return html
+    .replaceAll('<div class="asset-balance"><span>SOL</span>',`<div class="asset-balance"><span class="token-label">${solIcon}<span>SOL</span></span>`)
+    .replaceAll('<div class="asset-balance"><span>USDC</span>',`<div class="asset-balance"><span class="token-label">${usdcIcon}<span>USDC</span></span>`)
+    .replaceAll('<div class="asset-balance"><span>USDC · standard account</span>',`<div class="asset-balance"><span class="token-label">${usdcIcon}<span>USDC · standard account</span></span>`);
+}
 function addSearchScript(html){
   return html.replace('</head>','<script src="/site-search.js" defer></script></head>');
 }
@@ -58,7 +67,10 @@ function enhanceRoadmap(html){
 }
 
 export function enhanceHtml(html,route){
-  const enhanced=enhanceIcons(html);
+  const pageClass={home:'home-page',wallet:'wallet-page',docs:'docs-page',roadmap:'roadmap-page'}[route]||'home-page';
+  const routed=html.replace('<div class="site-wrap">',`<div class="site-wrap ${pageClass}">`);
+  const enhanced=enhanceIcons(routed);
+  if(route==='wallet')return enhanceWallet(enhanced);
   if(route==='docs')return enhanceDocs(enhanced);
   if(route==='roadmap')return enhanceRoadmap(enhanced);
   return enhanced;
