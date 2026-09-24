@@ -25,7 +25,8 @@ function enhanceIcons(html){
     .replaceAll(' ↓',` ${arrowDown}`)
     .replace('<span class="notice-icon">i</span>',`<span class="notice-icon">${info}</span>`)
     .replace('<summary>How private payments work <span aria-hidden="true">+</span></summary>',`<summary>How private payments work <span class="summary-icon" aria-hidden="true">${plus}</span></summary>`)
-    .replace('</nav><a class="header-cta"',`</nav>${xLink}<a class="header-cta"`)
+    .replace('</nav><a class="header-cta"',`</nav><div class="header-actions">${xLink}<a class="header-cta"`)
+    .replace('</a></header>','</a></div></header>')
     .replace('<p>An open world deserves a private layer.</p>',`<p>An open world deserves a private layer.</p>${xLink}`)
     .replace('</head>','<link rel="stylesheet" href="/site-layout.css"><script src="/site.js" defer></script></head>');
 }

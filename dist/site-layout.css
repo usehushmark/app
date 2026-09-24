@@ -68,4 +68,11 @@
   .footer-bottom{display:grid;grid-template-columns:1fr;gap:9px;padding:20px 0 28px}
   .docs-page .site-header,.roadmap-page .site-header{padding-top:18px}
   .docs-page .footer-top,.roadmap-page .footer-top{padding:28px 0}
+}/* Header action group */
+.site-header .header-actions{display:flex;align-items:center;gap:24px;margin-left:auto}
+.site-header .header-actions .social-link{width:auto;height:auto;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;margin:0}
+.site-header .header-actions .header-cta{margin:0}
+@media(max-width:800px){
+  .site-header .header-actions{grid-column:2;grid-row:1;gap:14px;margin:0}
+  .site-header .header-actions .header-cta{padding:9px 12px;font-size:12px}
 }
