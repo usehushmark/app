@@ -1,0 +1,22 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {enhanceHtml} from '../site-enhance.mjs';
+
+test('Docs enhancement adds sidebar search without replacing content',()=>{
+  const html='<html><head></head><body><main><div class="page-heading"><h1>Docs</h1></div><div class="docs-content"><section id="overview"><h2>Overview</h2><p>Keep this content.</p></section><div class="reference-links"></div></div></main></body></html>';
+  const output=enhanceHtml(html,'docs');
+
+  assert.match(output,/class="page-shell docs-shell"/);
+  assert.match(output,/data-search-input="docs"/);
+  assert.match(output,/Keep this content\./);
+  assert.match(output,/site-search\.js/);
+});
+
+test('Roadmap enhancement adds searchable phase navigation',()=>{
+  const html='<html><head></head><body><main><div class="roadmap-list"><article class="milestone"><div class="milestone-index">01</div><h2>Integrated</h2></article></div></main></body></html>';
+  const output=enhanceHtml(html,'roadmap');
+
+  assert.match(output,/class="page-shell roadmap-shell"/);
+  assert.match(output,/data-search-input="roadmap"/);
+  assert.match(output,/id="milestone-1"/);
+});
