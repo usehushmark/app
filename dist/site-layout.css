@@ -105,8 +105,16 @@ html,body{background:var(--bg);overflow-x:clip}
 /* Mobile navigation lane */
 @media(max-width:800px){
   .site-header{position:relative}
-  .site-header nav{grid-column:1/-1;grid-row:2;width:100%;padding-right:52px;scroll-padding-right:52px;gap:clamp(16px,5vw,30px)}
+  /* Nav spans col 1 only so X icon gets col 2 in the same row */
+  .site-header nav{grid-column:1;grid-row:2;width:100%;padding-right:12px;scroll-padding-right:12px;gap:clamp(16px,5vw,30px)}
   .site-header .header-actions{display:contents}
   .site-header .header-actions .header-cta{grid-column:2;grid-row:1;align-self:start;margin:0;padding:9px 12px;font-size:12px}
-  .site-header .header-actions .social-link{position:absolute;right:2px;bottom:16px;grid-column:auto;grid-row:auto;margin:0}
+  /* X icon: explicit grid cell, vertically centred with the nav row, no absolute positioning */
+  .site-header .header-actions .social-link{position:relative;grid-column:2;grid-row:2;justify-self:end;align-self:center;margin:0 0 16px;z-index:2;background:var(--bg);padding-left:10px}
 }
+/* Custom thin scrollbar */
+:root{scrollbar-width:thin;scrollbar-color:var(--line) transparent}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:#3b414a}
