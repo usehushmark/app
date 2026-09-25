@@ -102,3 +102,11 @@ html,body{background:var(--bg);overflow-x:clip}
 @media(max-width:1100px){.site-wrap{--site-gutter:36px}}
 @media(max-width:800px){.site-wrap{--site-gutter:24px}}
 @media(max-width:400px){.site-wrap{--site-gutter:18px}}
+/* Mobile navigation lane */
+@media(max-width:800px){
+  .site-header{position:relative}
+  .site-header nav{grid-column:1/-1;grid-row:2;width:100%;padding-right:52px;scroll-padding-right:52px;gap:clamp(16px,5vw,30px)}
+  .site-header .header-actions{display:contents}
+  .site-header .header-actions .header-cta{grid-column:2;grid-row:1;align-self:start;margin:0;padding:9px 12px;font-size:12px}
+  .site-header .header-actions .social-link{position:absolute;right:2px;bottom:16px;grid-column:auto;grid-row:auto;margin:0}
+}
