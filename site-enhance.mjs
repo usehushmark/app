@@ -29,7 +29,7 @@ function enhanceIcons(html){
     .replace('</nav><a class="header-cta"',`</nav><div class="header-actions">${headerXLink}<a class="header-cta"`)
     .replace('</a></header>','</a></div></header>')
     .replace('<p>An open world deserves a private layer.</p>',`<p>An open world deserves a private layer.</p>${xLink}`)
-    .replace('</head>','<link rel="stylesheet" href="/site-layout.css"><script src="/site.js" defer></script></head>');
+    .replace('</head>','<link rel="stylesheet" href="/site-layout.css?v=20260925-2"><script src="/site.js" defer></script></head>');
 }
 
 function pageSearch(scope,label,links){

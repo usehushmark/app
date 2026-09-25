@@ -20,3 +20,9 @@ test('Roadmap enhancement adds searchable phase navigation',()=>{
   assert.match(output,/data-search-input="roadmap"/);
   assert.match(output,/id="milestone-1"/);
 });
+
+test('site enhancement versions the layout stylesheet for cache-safe deployments',()=>{
+  const output=enhanceHtml('<html><head></head><body></body></html>','home');
+
+  assert.match(output,/site-layout\.css\?v=20260925-2/);
+});
