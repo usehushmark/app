@@ -31,7 +31,7 @@ test('site enhancement adds a HUSHM token CA copy control to the footer',()=>{
   const output=enhanceHtml(html,'home');
 
   assert.match(output,/\$HUSHM/);
-  assert.match(output,/data-contract-address="HUSHMARK_TOKEN_CA_PENDING"/);
+  assert.match(output,/data-contract-address="F1vfNJ5QiGP5j8P7pMUaCCVJterQVn9WdzgbHQgGpump"/);
   assert.match(output,/data-copy-contract/);
   assert.match(output,/CA copied/);
 });

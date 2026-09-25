@@ -13,7 +13,7 @@ const arrowLeft=icon(FiArrowLeft);
 const info=icon(FiInfo);
 const plus=icon(FiPlus);
 const search=icon(FiSearch);
-const tokenContractAddress='HUSHMARK_TOKEN_CA_PENDING';
+const tokenContractAddress='F1vfNJ5QiGP5j8P7pMUaCCVJterQVn9WdzgbHQgGpump';
 const tokenContractCopy=`<div class="contract-address" data-contract-address="${tokenContractAddress}" data-copy-success="CA copied" data-copy-error="Copy failed. Copy the CA manually."><span class="eyebrow">$HUSHM</span><div class="contract-address-value"><code>${tokenContractAddress}</code><button type="button" class="copy-contract" data-copy-contract aria-label="Copy $HUSHM contract address">${icon(FiCopy)}</button></div><span class="copy-toast" data-copy-status role="status" aria-live="polite"></span></div>`;
 const xLink=`<a class="social-link" href="https://x.com/devhushmark" target="_blank" rel="noopener noreferrer" aria-label="Hushmark on X">${icon(SiX)}</a>`;
 const headerXLink=`<a class="social-link header-x-link" href="https://x.com/devhushmark" target="_blank" rel="noopener noreferrer" aria-label="Hushmark on X">${icon(SiX)}</a>`;
