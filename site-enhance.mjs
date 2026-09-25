@@ -50,7 +50,7 @@ function addSearchScript(html){
 }
 
 function enhanceDocs(html){
-  const sidebar=pageSearch('docs','5 SECTIONS',[['Overview','#overview'],['Recovery','#recovery'],['Fees','#fees'],['Privacy limits','#limits'],['Token status','#token']]);
+  const sidebar=pageSearch('docs','6 SECTIONS',[['Overview','#overview'],['Recovery','#recovery'],['Fees','#fees'],['Privacy limits','#limits'],['Activity','#activity'],['Token status','#token']]);
   return addSearchScript(html
     .replace('<div class="docs-content">',`<div class="page-shell docs-shell" data-search-scope="docs">${sidebar}<div class="docs-content">`)
     .replaceAll('<section id="','<section data-search-item="true" id="')
