@@ -118,3 +118,17 @@ html,body{background:var(--bg);overflow-x:clip}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px}
 ::-webkit-scrollbar-thumb:hover{background:#3b414a}
+/* Preview token contract address */
+.contract-address{display:flex;flex-direction:column;gap:5px;min-width:0}
+.contract-address .eyebrow{margin:0;font-size:10px;letter-spacing:1.2px}
+.contract-address-value{display:flex;align-items:center;gap:8px;min-width:0;border-bottom:1px solid var(--line);padding-bottom:5px}
+.contract-address code{overflow:hidden;color:var(--muted);font:11px monospace;text-overflow:ellipsis;white-space:nowrap}
+.copy-contract{display:inline-flex;align-items:center;justify-content:center;flex:none;border:0;background:transparent;color:var(--muted);padding:2px;line-height:1;transition:color .15s,transform .15s}
+.copy-contract:hover{color:var(--text);transform:translateY(-1px)}
+.copy-contract .site-icon{width:14px;height:14px;vertical-align:0}
+.copy-toast{position:fixed;left:50%;bottom:24px;z-index:30;max-width:calc(100vw - 40px);padding:8px 12px;border:1px solid var(--line);background:#15181d;color:var(--text);font-size:12px;opacity:0;pointer-events:none;transform:translate(-50%,12px);transition:opacity .15s,transform .15s}
+.copy-toast[data-visible="true"]{opacity:1;transform:translate(-50%,0)}
+@media(max-width:800px){
+  .footer-top{grid-template-areas:"brand brand" "tagline tagline" "contract contract" "boundary social"}
+  .footer-top .contract-address{grid-area:contract;grid-column:auto}
+}

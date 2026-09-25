@@ -24,5 +24,14 @@ test('Roadmap enhancement adds searchable phase navigation',()=>{
 test('site enhancement versions the layout stylesheet for cache-safe deployments',()=>{
   const output=enhanceHtml('<html><head></head><body></body></html>','home');
 
-  assert.match(output,/site-layout\.css\?v=20260925-2/);
+  assert.match(output,/site-layout\.css\?v=20260925-3/);
+});
+test('site enhancement adds a clearly labelled preview token CA copy control to the footer',()=>{
+  const html='<html><head></head><body><footer><p>An open world deserves a private layer.</p></footer></body></html>';
+  const output=enhanceHtml(html,'home');
+
+  assert.match(output,/HUSHMARK TOKEN · NOT LIVE/);
+  assert.match(output,/data-contract-address="HUSHMARK_TOKEN_CA_PENDING"/);
+  assert.match(output,/data-copy-contract/);
+  assert.match(output,/Preview CA copied/);
 });

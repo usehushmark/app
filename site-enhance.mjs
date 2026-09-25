@@ -1,7 +1,7 @@
 import {readFile,writeFile} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 import {renderIcon} from './site-icons.mjs';
-import {FiArrowDown,FiArrowLeft,FiArrowRight,FiArrowUpRight,FiInfo,FiPlus,FiSearch} from 'react-icons/fi';
+import {FiArrowDown,FiArrowLeft,FiArrowRight,FiArrowUpRight,FiCopy,FiInfo,FiPlus,FiSearch} from 'react-icons/fi';
 import {SiX} from 'react-icons/si';
 import {TokenSOL,TokenUSDC} from '@web3icons/react';
 
@@ -13,6 +13,8 @@ const arrowLeft=icon(FiArrowLeft);
 const info=icon(FiInfo);
 const plus=icon(FiPlus);
 const search=icon(FiSearch);
+const tokenContractAddress='HUSHMARK_TOKEN_CA_PENDING';
+const tokenContractCopy=`<div class="contract-address" data-contract-address="${tokenContractAddress}" data-copy-success="Preview CA copied" data-copy-error="Copy failed. Copy the preview CA manually."><span class="eyebrow">HUSHMARK TOKEN · NOT LIVE</span><div class="contract-address-value"><code>${tokenContractAddress}</code><button type="button" class="copy-contract" data-copy-contract aria-label="Copy preview token contract address">${icon(FiCopy)}</button></div><span class="copy-toast" data-copy-status role="status" aria-live="polite"></span></div>`;
 const xLink=`<a class="social-link" href="https://x.com/devhushmark" target="_blank" rel="noopener noreferrer" aria-label="Hushmark on X">${icon(SiX)}</a>`;
 const headerXLink=`<a class="social-link header-x-link" href="https://x.com/devhushmark" target="_blank" rel="noopener noreferrer" aria-label="Hushmark on X">${icon(SiX)}</a>`;
 const solIcon=icon(TokenSOL,'token-icon',{size:18});
@@ -28,8 +30,8 @@ function enhanceIcons(html){
     .replace('<summary>How private payments work <span aria-hidden="true">+</span></summary>',`<summary>How private payments work <span class="summary-icon" aria-hidden="true">${plus}</span></summary>`)
     .replace('</nav><a class="header-cta"',`</nav><div class="header-actions">${headerXLink}<a class="header-cta"`)
     .replace('</a></header>','</a></div></header>')
-    .replace('<p>An open world deserves a private layer.</p>',`<p>An open world deserves a private layer.</p>${xLink}`)
-    .replace('</head>','<link rel="stylesheet" href="/site-layout.css?v=20260925-2"><script src="/site.js" defer></script></head>');
+    .replace('<p>An open world deserves a private layer.</p>',`<p>An open world deserves a private layer.</p>${tokenContractCopy}${xLink}`)
+    .replace('</head>','<link rel="stylesheet" href="/site-layout.css?v=20260925-3"><script src="/site.js" defer></script></head>');
 }
 
 function pageSearch(scope,label,links){
