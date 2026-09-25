@@ -6,7 +6,9 @@ document.querySelectorAll('a[href^="#"]').forEach(link=>link.addEventListener('c
 
 let copyToastTimer;
 async function copyText(value){
-  if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(value);return;}
+try{
+    if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(value);return;}
+  }catch{}
   const input=document.createElement('textarea');
   input.value=value;
   input.setAttribute('readonly','');

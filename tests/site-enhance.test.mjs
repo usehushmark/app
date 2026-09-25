@@ -24,7 +24,7 @@ test('Roadmap enhancement adds searchable phase navigation',()=>{
 test('site enhancement versions the layout stylesheet for cache-safe deployments',()=>{
   const output=enhanceHtml('<html><head></head><body></body></html>','home');
 
-  assert.match(output,/site-layout\.css\?v=20260925-3/);
+  assert.match(output,/site-layout\.css\?v=20260925-4/);
 });
 test('site enhancement adds a HUSHM token CA copy control to the footer',()=>{
   const html='<html><head></head><body><footer><p>An open world deserves a private layer.</p></footer></body></html>';
@@ -34,4 +34,11 @@ test('site enhancement adds a HUSHM token CA copy control to the footer',()=>{
   assert.match(output,/data-contract-address="F1vfNJ5QiGP5j8P7pMUaCCVJterQVn9WdzgbHQgGpump"/);
   assert.match(output,/data-copy-contract/);
   assert.match(output,/CA copied/);
+});
+test('site enhancement adds a CA-only copy icon to the header actions',()=>{
+  const html='<html><head></head><body><header class="site-header"><nav></nav><a class="header-cta" href="/wallet/">Open private wallet</a></header></body></html>';
+  const output=enhanceHtml(html,'home');
+
+  assert.match(output,/class="header-contract-copy"/);
+  assert.match(output,/aria-label="Copy \$HUSHM contract address"/);
 });

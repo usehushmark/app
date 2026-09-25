@@ -17,6 +17,7 @@ const tokenContractAddress='F1vfNJ5QiGP5j8P7pMUaCCVJterQVn9WdzgbHQgGpump';
 const tokenContractCopy=`<div class="contract-address" data-contract-address="${tokenContractAddress}" data-copy-success="CA copied" data-copy-error="Copy failed. Copy the CA manually."><span class="eyebrow">$HUSHM</span><div class="contract-address-value"><code>${tokenContractAddress}</code><button type="button" class="copy-contract" data-copy-contract aria-label="Copy $HUSHM contract address">${icon(FiCopy)}</button></div><span class="copy-toast" data-copy-status role="status" aria-live="polite"></span></div>`;
 const xLink=`<a class="social-link" href="https://x.com/devhushmark" target="_blank" rel="noopener noreferrer" aria-label="Hushmark on X">${icon(SiX)}</a>`;
 const headerXLink=`<a class="social-link header-x-link" href="https://x.com/devhushmark" target="_blank" rel="noopener noreferrer" aria-label="Hushmark on X">${icon(SiX)}</a>`;
+const headerContractCopy=`<div class="header-contract-copy" data-contract-address="${tokenContractAddress}" data-copy-success="CA copied" data-copy-error="Copy failed. Copy the CA manually."><button type="button" class="header-copy-contract" data-copy-contract aria-label="Copy $HUSHM contract address">${icon(FiCopy)}</button><span class="copy-toast" data-copy-status role="status" aria-live="polite"></span></div>`;
 const solIcon=icon(TokenSOL,'token-icon',{size:18});
 const usdcIcon=icon(TokenUSDC,'token-icon',{size:18});
 
@@ -28,10 +29,10 @@ function enhanceIcons(html){
     .replaceAll(' ↓',` ${arrowDown}`)
     .replace('<span class="notice-icon">i</span>',`<span class="notice-icon">${info}</span>`)
     .replace('<summary>How private payments work <span aria-hidden="true">+</span></summary>',`<summary>How private payments work <span class="summary-icon" aria-hidden="true">${plus}</span></summary>`)
-    .replace('</nav><a class="header-cta"',`</nav><div class="header-actions">${headerXLink}<a class="header-cta"`)
+    .replace('</nav><a class="header-cta"',`</nav><div class="header-actions">${headerXLink}${headerContractCopy}<a class="header-cta"`)
     .replace('</a></header>','</a></div></header>')
     .replace('<p>An open world deserves a private layer.</p>',`<p>An open world deserves a private layer.</p>${tokenContractCopy}${xLink}`)
-    .replace('</head>','<link rel="stylesheet" href="/site-layout.css?v=20260925-3"><script src="/site.js" defer></script></head>');
+    .replace('</head>','<link rel="stylesheet" href="/site-layout.css?v=20260925-4"><script src="/site.js" defer></script></head>');
 }
 
 function pageSearch(scope,label,links){

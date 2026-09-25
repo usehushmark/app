@@ -132,3 +132,15 @@ html,body{background:var(--bg);overflow-x:clip}
   .footer-top{grid-template-areas:"brand brand" "tagline tagline" "contract contract" "boundary social"}
   .footer-top .contract-address{grid-area:contract;grid-column:auto}
 }
+/* Mobile header contract copy */
+.header-contract-copy{display:none}
+.header-copy-contract{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;padding:0;border:0;border-radius:0;background:transparent;color:var(--muted);line-height:1}
+.header-copy-contract:hover{color:var(--text)}
+.header-copy-contract .site-icon{width:16px;height:16px;vertical-align:0}
+@media(max-width:800px){
+  .site-header .header-actions{display:grid;grid-column:2;grid-row:1 / span 2;grid-template-columns:auto auto;grid-template-rows:auto 1fr;align-self:stretch;align-items:center;justify-items:end;column-gap:12px;margin:0}
+  .site-header .header-actions .header-cta{grid-column:1/-1;grid-row:1;align-self:start;margin:0;padding:9px 12px;font-size:12px}
+  .header-contract-copy{display:contents}
+  .header-copy-contract{grid-column:1;grid-row:2;align-self:center;justify-self:end;margin:0 0 16px}
+  .site-header .header-actions .header-x-link{grid-column:2;grid-row:2;align-self:center;justify-self:end;margin:0 0 16px;padding:0;background:transparent}
+}
