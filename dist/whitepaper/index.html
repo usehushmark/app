@@ -9,8 +9,20 @@
 .wp-view-link{font-size:14px;color:var(--muted);display:inline-flex;align-items:center;gap:8px}
 .wp-view-link:hover{color:var(--text)}
 
-.wp-content-wrap{padding-top:36px;border-top:1px solid var(--line)}
+.wp-content-wrap{display:grid;grid-template-columns:1fr 240px;gap:72px;align-items:start;padding-top:36px;border-top:1px solid var(--line)}
 
+.wp-right-sidebar{position:sticky;top:28px;display:flex;flex-direction:column;gap:0}
+.wp-toc-heading{font:11px monospace;letter-spacing:1.5px;color:var(--muted);margin:0 0 16px}
+.wp-toc-nav{display:flex;flex-direction:column;gap:2px}
+.wp-toc-nav a{font-size:13px;color:var(--muted);padding:7px 10px;border-left:2px solid transparent;transition:color .12s,border-color .12s;line-height:1.4}
+.wp-toc-nav a:hover{color:var(--text)}
+.wp-toc-nav a.wp-active{color:var(--text);border-left-color:var(--accent)}
+.wp-sidebar-sep{border:0;border-top:1px solid var(--line);margin:18px 0}
+.wp-sidebar-dl{display:flex;flex-direction:column;gap:10px}
+.wp-sidebar-download{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;background:transparent;border:1px solid #3b414a;color:var(--text);border-radius:5px;padding:10px 14px;font-size:13px;font-weight:600;transition:border-color .15s,color .15s}
+.wp-sidebar-download:hover{border-color:var(--accent);color:var(--accent)}
+.wp-sidebar-meta{display:flex;flex-direction:column;gap:5px;padding:0 2px}
+.wp-sidebar-meta span{font:11px monospace;letter-spacing:1px;color:#727b87}
 
 .wp-content section{padding:52px 0;border-top:1px solid var(--line);scroll-margin-top:30px}
 .wp-content section:first-child{border-top:0;padding-top:40px}
@@ -47,10 +59,13 @@
 .wp-dl dd{margin:0 0 0 0;color:var(--muted);font-size:14px;line-height:1.75}
 
 
+@media(max-width:900px){
+  .wp-content-wrap{grid-template-columns:1fr;gap:0}
+  .wp-right-sidebar{display:none}
+}
 @media(max-width:800px){
   .wp-hero{padding:45px 0 38px}
   .wp-hero h1{font-size:52px;letter-spacing:-2.5px}
-  .wp-shell{grid-template-columns:1fr}
   .wp-content section{padding:38px 0}
   .wp-content h2{font-size:26px}
   .wp-table td.wp-td-key{white-space:normal;min-width:0}
@@ -74,4 +89,20 @@
 
 <section id="references"><span class="wp-section-eyebrow">08 / REFERENCES AND TERMINOLOGY</span><h2>Sources and<br>key terms.</h2><h3>Implementation references</h3><div class="wp-ref-list"><div class="wp-ref"><span class="wp-ref-num">[1]</span><div class="wp-ref-body">Hushmark implementation snapshot, 25 September 2026. The accompanying website-source folder includes README.md, VERIFICATION.md, package.json, build-privacy.mjs, and src/privacy.js, src/privacy-sdk.js, src/privacy-guards.js, and src/config.js.</div></div><div class="wp-ref"><span class="wp-ref-num">[2]</span><div class="wp-ref-body">Privacy Cash SDK. Hushmark pins dependency version 1.2.2.<br><a href="https://github.com/Privacy-Cash/privacy-cash-sdk" target="_blank" rel="noopener noreferrer">github.com/Privacy-Cash/privacy-cash-sdk</a></div></div><div class="wp-ref"><span class="wp-ref-num">[3]</span><div class="wp-ref-body">Privacy Cash frontend integration and recovery guidance.<br><a href="https://privacycash.mintlify.app/sdk/frontend" target="_blank" rel="noopener noreferrer">privacycash.mintlify.app/sdk/frontend</a></div></div><div class="wp-ref"><span class="wp-ref-num">[4]</span><div class="wp-ref-body">Privacy Cash balance and note-reading integration.<br><a href="https://privacycash.mintlify.app/sdk/balance-fe" target="_blank" rel="noopener noreferrer">privacycash.mintlify.app/sdk/balance-fe</a></div></div><div class="wp-ref"><span class="wp-ref-num">[5]</span><div class="wp-ref-body">Privacy Cash deposit and withdrawal integrations.<br><a href="https://privacycash.mintlify.app/sdk/deposit-fe" target="_blank" rel="noopener noreferrer">privacycash.mintlify.app/sdk/deposit-fe</a> · <a href="https://privacycash.mintlify.app/sdk/withdraw-fe" target="_blank" rel="noopener noreferrer">privacycash.mintlify.app/sdk/withdraw-fe</a></div></div></div><h3>Terminology</h3><dl class="wp-dl"><dt>Encrypted note</dt><dd>Protocol data representing an amount and the information needed to identify and spend it with the corresponding keys.</dd><dt>Zero-knowledge proof</dt><dd>A cryptographic proof that establishes a specified statement while withholding the private witness used to produce it. Its guarantees apply to the statement and protocol construction involved.</dd><dt>Relayer</dt><dd>A service used by the protocol integration to submit or coordinate operations and provide related protocol data. It is also a point of availability and metadata dependence.</dd><dt>Unlinkability</dt><dd>The intended difficulty of determining which deposit is related to a withdrawal. It depends on the protocol and surrounding observable behavior.</dd><dt>Finality</dt><dd>The network confirmation state used by the interface to distinguish completed settlement from submission or an unresolved result.</dd></dl><h3>Document scope</h3><p>This version describes the Hushmark integration and the evidence available as of its publication date. It should be updated when implementation, protocol dependencies, or testing status change. The inclusion of upstream references identifies dependencies and does not imply affiliation or endorsement.</p></section>
 
-</div></div></main><footer><div class="footer-top"><a class="brand" href="/"><img class="brandmark" src="/assets/hushmark-hood-red.png" width="36" height="36" alt="">hushmark<span class="word-dot">.</span></a><p>An open world deserves a private layer.</p><a class="social-link" href="https://x.com/devhushmark" target="_blank" rel="noopener noreferrer" aria-label="Hushmark on X"><svg stroke="currentColor" fill="currentColor" stroke-width="0" role="img" viewBox="0 0 24 24" class="site-icon" aria-hidden="true" focusable="false" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M14.234 10.162 22.977 0h-2.072l-7.591 8.824L7.251 0H.258l9.168 13.343L.258 24H2.33l8.016-9.318L16.749 24h6.993zm-2.837 3.299-.929-1.329L3.076 1.56h3.182l5.965 8.532.929 1.329 7.754 11.09h-3.182z"></path></svg></a><a class="footer-boundary-link" href="/docs/#limits">Privacy boundaries <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="site-icon" aria-hidden="true" focusable="false" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg></a></div><div class="footer-bottom"><span>© 2026 Hushmark</span><span>Privacy Cash integration · Solana</span><a href="https://privacycash.mintlify.app/" target="_blank" rel="noopener noreferrer">Protocol documentation <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="site-icon" aria-hidden="true" focusable="false" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg></a></div></footer></div></body></html>
+</div><aside class="wp-right-sidebar" aria-label="Page outline"><p class="wp-toc-heading">ON THIS PAGE</p><nav class="wp-toc-nav" aria-label="Whitepaper sections"><a href="#overview">Overview</a><a href="#scope">Purpose &amp; scope</a><a href="#architecture">System architecture</a><a href="#lifecycle">Payment lifecycle</a><a href="#privacy">Privacy model</a><a href="#keys">Key handling</a><a href="#validation">Validation</a><a href="#references">References</a></nav><hr class="wp-sidebar-sep"><div class="wp-sidebar-dl"><a class="wp-sidebar-download" href="/whitepaper/Hushmark-Whitepaper-v1.0.pdf" download="Hushmark-Whitepaper-v1.0.pdf"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="site-icon" aria-hidden="true" focusable="false" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> Download PDF</a><div class="wp-sidebar-meta"><span>VERSION 1.0</span><span>25 SEPT 2026</span><span>PRIVACY CASH SDK 1.2.2</span></div></div></aside></div></main><script>
+(function(){
+  var sections=document.querySelectorAll('.wp-content section[id]');
+  var links=document.querySelectorAll('.wp-toc-nav a');
+  if(!sections.length||!links.length)return;
+  var obs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        links.forEach(function(l){l.classList.remove('wp-active')});
+        var a=document.querySelector('.wp-toc-nav a[href="#'+e.target.id+'"]');
+        if(a)a.classList.add('wp-active');
+      }
+    });
+  },{rootMargin:'-8% 0px -80% 0px'});
+  sections.forEach(function(s){obs.observe(s)});
+})();
+</script><footer><div class="footer-top"><a class="brand" href="/"><img class="brandmark" src="/assets/hushmark-hood-red.png" width="36" height="36" alt="">hushmark<span class="word-dot">.</span></a><p>An open world deserves a private layer.</p><a class="social-link" href="https://x.com/devhushmark" target="_blank" rel="noopener noreferrer" aria-label="Hushmark on X"><svg stroke="currentColor" fill="currentColor" stroke-width="0" role="img" viewBox="0 0 24 24" class="site-icon" aria-hidden="true" focusable="false" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M14.234 10.162 22.977 0h-2.072l-7.591 8.824L7.251 0H.258l9.168 13.343L.258 24H2.33l8.016-9.318L16.749 24h6.993zm-2.837 3.299-.929-1.329L3.076 1.56h3.182l5.965 8.532.929 1.329 7.754 11.09h-3.182z"></path></svg></a><a class="footer-boundary-link" href="/docs/#limits">Privacy boundaries <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="site-icon" aria-hidden="true" focusable="false" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg></a></div><div class="footer-bottom"><span>© 2026 Hushmark</span><span>Privacy Cash integration · Solana</span><a href="https://privacycash.mintlify.app/" target="_blank" rel="noopener noreferrer">Protocol documentation <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="site-icon" aria-hidden="true" focusable="false" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg></a></div></footer></div></body></html>
