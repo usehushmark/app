@@ -14,6 +14,7 @@ const info=icon(FiInfo);
 const plus=icon(FiPlus);
 const search=icon(FiSearch);
 const xLink=`<a class="social-link" href="https://x.com/devhushmark" target="_blank" rel="noopener noreferrer" aria-label="Hushmark on X">${icon(SiX)}</a>`;
+const headerXLink=`<a class="social-link header-x-link" href="https://x.com/devhushmark" target="_blank" rel="noopener noreferrer" aria-label="Hushmark on X">${icon(SiX)}</a>`;
 const solIcon=icon(TokenSOL,'token-icon',{size:18});
 const usdcIcon=icon(TokenUSDC,'token-icon',{size:18});
 
@@ -25,7 +26,7 @@ function enhanceIcons(html){
     .replaceAll(' ↓',` ${arrowDown}`)
     .replace('<span class="notice-icon">i</span>',`<span class="notice-icon">${info}</span>`)
     .replace('<summary>How private payments work <span aria-hidden="true">+</span></summary>',`<summary>How private payments work <span class="summary-icon" aria-hidden="true">${plus}</span></summary>`)
-    .replace('</nav><a class="header-cta"',`</nav><div class="header-actions">${xLink}<a class="header-cta"`)
+    .replace('</nav><a class="header-cta"',`</nav><div class="header-actions">${headerXLink}<a class="header-cta"`)
     .replace('</a></header>','</a></div></header>')
     .replace('<p>An open world deserves a private layer.</p>',`<p>An open world deserves a private layer.</p>${xLink}`)
     .replace('</head>','<link rel="stylesheet" href="/site-layout.css"><script src="/site.js" defer></script></head>');
