@@ -63,7 +63,7 @@
   .footer-top{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px 22px;padding:32px 0}
   .footer-top .brand{grid-column:1/-1}
   .footer-top p{grid-column:1/-1;max-width:300px}
-  .footer-top>a:not(.social-link){grid-column:1;grid-row:3;width:auto;align-self:center}
+  .footer-top>a:not(.social-link):not(.brand){grid-column:1;grid-row:3;width:auto;align-self:center}
   .footer-top .social-link{grid-column:2;grid-row:3;justify-self:end;margin:0;align-self:center}
   .footer-bottom{display:grid;grid-template-columns:1fr;gap:9px;padding:20px 0 28px}
   .docs-page .site-header,.roadmap-page .site-header{padding-top:18px}
@@ -92,6 +92,13 @@
   .footer-top{grid-template-areas:"brand brand" "tagline tagline" "boundary social"}
   .footer-top .brand{grid-area:brand}
   .footer-top p{grid-area:tagline}
-  .footer-top>a:not(.social-link){grid-area:boundary}
+  .footer-top>a:not(.social-link):not(.brand){grid-area:boundary}
   .footer-top .social-link{grid-area:social}
 }
+/* Full-viewport chrome */
+html,body{background:var(--bg);overflow-x:clip}
+.site-wrap{--site-gutter:64px;width:100%}
+.site-header,footer{width:100vw;margin-left:calc(50% - 50vw);padding-left:max(var(--site-gutter),calc((100vw - 1440px)/2 + var(--site-gutter)));padding-right:max(var(--site-gutter),calc((100vw - 1440px)/2 + var(--site-gutter)))}
+@media(max-width:1100px){.site-wrap{--site-gutter:36px}}
+@media(max-width:800px){.site-wrap{--site-gutter:24px}}
+@media(max-width:400px){.site-wrap{--site-gutter:18px}}

@@ -11,6 +11,19 @@ test('mobile footer gives the brand, tagline, privacy link, and X link separate 
   );
   assert.match(css, /\.footer-top \.brand\{grid-area:brand\}/);
   assert.match(css, /\.footer-top p\{grid-area:tagline/);
-  assert.match(css, /\.footer-top>a:not\(\.social-link\)\{grid-area:boundary/);
+  assert.match(css, /\.footer-top>a:not\(\.social-link\):not\(\.brand\)\{grid-area:boundary/);
   assert.match(css, /\.footer-top \.social-link\{grid-area:social/);
+});
+
+test('mobile footer excludes the brand from the privacy-link placement rule', async () => {
+  const css = await readFile('dist/site-layout.css', 'utf8');
+
+  assert.match(css, /\.footer-top>a:not\(\.social-link\):not\(\.brand\)\{grid-column:1;grid-row:3/);
+  assert.doesNotMatch(css, /\.footer-top>a:not\(\.social-link\)\{grid-column:1;grid-row:3/);
+});
+test('site shell and chrome span the viewport while preserving content gutters', async () => {
+  const css = await readFile('dist/site-layout.css', 'utf8');
+
+  assert.match(css, /\.site-wrap\{--site-gutter:64px;width:100%\}/);
+  assert.match(css, /\.site-header,footer\{width:100vw;margin-left:calc\(50% - 50vw\)/);
 });
