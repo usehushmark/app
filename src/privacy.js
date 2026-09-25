@@ -30,14 +30,14 @@ globalThis.fetch=async(input,init)=>{
  const url=new URL(typeof input==='string'?input:input.url||String(input),location.href);
  const mutation=url.origin===RELAYER&&init?.method==='POST'&&/^\/(deposit|withdraw)(\/|$)/.test(url.pathname);
  if(mutation){guard(operation?.version);if(!operation||operation.submitted)throw new Error('No unsubmitted payment approval.');const body=JSON.parse(init.body);
-  if(url.pathname.startsWith('/withdraw')){if(operation.type!=='withdraw')throw new Error('Unexpected withdrawal.');validateWithdrawal(body,operation);operation.proofBytes=body.serializedProof;}
+  if(url.pathname.startsWith('/withdraw')){if(operation.type!=='withdraw')throw new Error('Unexpected withdrawal.');validateWithdrawal(body,operation);operation.proofBytes=body.serializedProof;operation.proofDigest=await digestProof(Uint8Array.from(Buffer.from(body.serializedProof,'base64')));}
   else{if(operation.type!=='deposit'||body.signedTransaction!==operation.signedBytes)throw new Error('Unexpected deposit payload.');}
   operation.submitted=true;message('Submitting the reviewed proof to Privacy Cash…');
  }
  const submittedOperation=mutation?operation:null;
  const signals=[AbortSignal.timeout(60000)];if(init?.signal)signals.push(init.signal);if(url.origin===RELAYER)signals.push(abort.signal);
  const response=await rawFetch(input,{...init,signal:AbortSignal.any(signals)});
- if(mutation){const result=await response.clone().json().catch(()=>null);if(result?.signature){if(submittedOperation.type==='deposit'&&result.signature!==submittedOperation.signature)throw new Error('Relayer returned a different transaction signature.');submittedOperation.signature=result.signature;if(submittedOperation.type==='withdraw')lastWithdrawal={signature:result.signature,proofBytes:submittedOperation.proofBytes};await persistActivity({id:submittedOperation.activityId,signature:result.signature,status:'submitted',updatedAt:Date.now()});showTransaction(result.signature,'Submitted; awaiting network verification');}}
+ if(mutation){const result=await response.clone().json().catch(()=>null);if(result?.signature){if(submittedOperation.type==='deposit'&&result.signature!==submittedOperation.signature)throw new Error('Relayer returned a different transaction signature.');submittedOperation.signature=result.signature;if(submittedOperation.type==='withdraw')lastWithdrawal={signature:result.signature,proofBytes:submittedOperation.proofBytes};await persistActivity({...{id:submittedOperation.activityId,signature:result.signature,status:'submitted',updatedAt:Date.now()},...(submittedOperation.proofDigest?{proofDigest:submittedOperation.proofDigest}:{})});showTransaction(result.signature,'Submitted; awaiting network verification');}}
  return response;
 };
 async function unlock(){
