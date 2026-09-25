@@ -63,7 +63,7 @@
   .footer-top{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px 22px;padding:32px 0}
   .footer-top .brand{grid-column:1/-1}
   .footer-top p{grid-column:1/-1;max-width:300px}
-  .footer-top>a:not(.social-link):not(.brand){grid-column:1;grid-row:3;width:auto;align-self:center}
+  .footer-top .footer-boundary-link{grid-column:1;grid-row:3;width:auto;align-self:center}
   .footer-top .social-link{grid-column:2;grid-row:3;justify-self:end;margin:0;align-self:center}
   .footer-bottom{display:grid;grid-template-columns:1fr;gap:9px;padding:20px 0 28px}
   .docs-page .site-header,.roadmap-page .site-header{padding-top:18px}
@@ -92,7 +92,7 @@
   .footer-top{grid-template-areas:"brand brand" "tagline tagline" "boundary social"}
   .footer-top .brand{grid-area:brand}
   .footer-top p{grid-area:tagline}
-  .footer-top>a:not(.social-link):not(.brand){grid-area:boundary}
+  .footer-top .footer-boundary-link{grid-area:boundary}
   .footer-top .social-link{grid-area:social}
 }
 /* Full-viewport chrome */
