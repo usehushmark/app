@@ -16,4 +16,4 @@ test('Docs and Roadmap pages use dedicated chrome and justified reading styles',
   assert.match(css,/\.roadmap-page \.site-header/);
   assert.match(css,/\.docs-page footer,\.roadmap-page footer/);
   assert.match(docs,/<nav aria-label="Main navigation">[\s\S]*<\/nav><div class="header-actions"><a class="social-link"[\s\S]*<a class="header-cta"/);
-  assert.match(css,/\.header-actions \.social-link\{[^}]*border:0;[^}]*background:transparent/);});
+  assert.match(css,/\.header-actions \.social-link\{[^}]*border:0;[^}]*background:transparent/);  assert.match(css,/\.site-header \.header-actions\{display:contents\}/);});

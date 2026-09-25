@@ -75,4 +75,9 @@
 @media(max-width:800px){
   .site-header .header-actions{grid-column:2;grid-row:1;gap:14px;margin:0}
   .site-header .header-actions .header-cta{padding:9px 12px;font-size:12px}
+}/* Mobile split navigation */
+@media(max-width:800px){
+  .site-header .header-actions{display:contents}
+  .site-header .header-actions .header-cta{grid-column:2;grid-row:1;margin:0;padding:9px 12px;font-size:12px}
+  .site-header .header-actions .social-link{grid-column:2;grid-row:2;justify-self:end;align-self:center;margin:0 2px 16px}
 }
