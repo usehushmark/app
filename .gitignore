@@ -2,4 +2,3 @@
 *.log
 qa/
 node_modules/
-.worktrees/

@@ -1,3 +1,4 @@
+import {ASSETS} from './config.js';
 // This journal is local to the browser. Its key is separate from protocol note keys.
 export const ACTIVITY_SCHEMA_VERSION = 1;
 export const ACTIVITY_MAX_RECORDS = 100;
@@ -48,7 +49,7 @@ function checkedPatch(value) {
 function checkedRecord(value) {
   const record = checkedPatch(value);
   if (required.some(field => !Object.hasOwn(record, field))) throw new TypeError('Incomplete activity record.');
-  if (!['deposit', 'withdraw'].includes(record.type) || !['SOL', 'USDC'].includes(record.asset)) throw new TypeError('Invalid activity type or asset.');
+  if (!['deposit', 'withdraw'].includes(record.type) || !ASSETS.some(asset=>asset.symbol===record.asset)) throw new TypeError('Invalid activity type or asset.');
   for (const field of ['amount', 'netAmount', 'fee']) {
     if (field !== 'amount' && !Object.hasOwn(record, field)) continue;
     const amount = record[field];

@@ -61,7 +61,7 @@ const errors = [], blocked = [], rpcCalls = [];
 let withdrawalReceipt = 'missing';
 const statuses = new Map();
 const status = (confirmationStatus, err = null) => ({slot: 100, confirmations: confirmationStatus === 'finalized' ? null : 1, confirmationStatus, err});
-const config = {withdraw_fee_rate: .0035, withdraw_rent_fee: .006, rent_fees: {usdc: .7}, minimum_withdrawal: {sol: .01, usdc: 2}};
+const config = {withdraw_fee_rate: .0035, withdraw_rent_fee: .006, rent_fees: {usdc: .7,usdt:.9}, minimum_withdrawal: {sol: .01, usdc: 2,usdt:3}};
 page.on('pageerror', error => errors.push(error.message));
 
 await page.addInitScript({content: `

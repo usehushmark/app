@@ -288,3 +288,8 @@ test('locking during backup decryption cancels restore without writing',async()=
  const wait=deferred(),target=storageFixture();const journal=await open(target,{crypto:controlledCrypto('decrypt',()=>wait.promise)});
  const promise=journal.restoreBackup(backup);await new Promise(resolve=>setTimeout(resolve,10));journal.close();wait.resolve();await assert.rejects(promise);assert.equal(target.data.size,0);
 });
+
+test('USDT history restores alongside legacy SOL/USDC records without relabeling assets',async()=>{
+ const journal=await open(storageFixture());await journal.upsert(record({id:'sol'}));await journal.upsert(record({id:'usdc',asset:'USDC'}));await journal.upsert(record({id:'usdt',asset:'USDT',amount:'5123456'}));
+ const backup=await journal.exportBackup(),restored=await open(storageFixture());const items=await restored.restoreBackup(backup);assert.deepEqual(items.map(r=>r.asset).sort(),['SOL','USDC','USDT']);assert.equal(items.find(r=>r.asset==='USDT').amount,'5123456');assert.ok(!backup.includes('USDT'));
+});

@@ -17,9 +17,6 @@ importers:
       '@solana/web3.js':
         specifier: 1.98.4
         version: 1.98.4(bufferutil@4.1.0)(typescript@7.0.2)(utf-8-validate@6.0.6)
-      '@web3icons/react':
-        specifier: 4.1.22
-        version: 4.1.22(react@19.3.0)
       assert:
         specifier: 2.1.0
         version: 2.1.0
@@ -44,15 +41,6 @@ importers:
       qrcode:
         specifier: 1.5.4
         version: 1.5.4
-      react:
-        specifier: 19.3.0
-        version: 19.3.0
-      react-dom:
-        specifier: 19.3.0
-        version: 19.3.0(react@19.3.0)
-      react-icons:
-        specifier: 5.7.0
-        version: 5.7.0(react@19.3.0)
       stream-browserify:
         specifier: 3.0.0
         version: 3.0.0
@@ -63,9 +51,21 @@ importers:
         specifier: 0.12.5
         version: 0.12.5
     devDependencies:
+      '@web3icons/react':
+        specifier: 4.1.22
+        version: 4.1.22(react@19.3.0)
       esbuild:
         specifier: 0.25.10
         version: 0.25.10
+      react:
+        specifier: 19.3.0
+        version: 19.3.0
+      react-dom:
+        specifier: 19.3.0
+        version: 19.3.0(react@19.3.0)
+      react-icons:
+        specifier: 5.7.0
+        version: 5.7.0(react@19.3.0)
 
 packages:
 

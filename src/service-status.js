@@ -1,11 +1,11 @@
-import {GENESIS} from './config.js';
+import {GENESIS,ASSETS} from './config.js';
 import {PROGRAM,RELAYER} from './privacy-guards.js';
 
 export function validFeeService(config) {
   return Number.isFinite(config?.withdraw_fee_rate)&&config.withdraw_fee_rate>=0&&config.withdraw_fee_rate<1
     && Number.isFinite(config?.withdraw_rent_fee)&&config.withdraw_rent_fee>=0
-    && Number.isFinite(config?.rent_fees?.usdc)&&config.rent_fees.usdc>=0
-    && ['sol','usdc'].every(a=>Number.isFinite(config.minimum_withdrawal?.[a])&&config.minimum_withdrawal[a]>0);
+    && ASSETS.filter(a=>a.mint).every(a=>Number.isFinite(config?.rent_fees?.[a.symbol.toLowerCase()])&&config.rent_fees[a.symbol.toLowerCase()]>=0)
+    && ASSETS.map(a=>a.symbol.toLowerCase()).every(a=>Number.isFinite(config.minimum_withdrawal?.[a])&&config.minimum_withdrawal[a]>0);
 }
 
 export async function checkServices({rpc,fetch=globalThis.fetch,signal,onResult=()=>{}}) {

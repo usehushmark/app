@@ -1,10 +1,12 @@
+import {ASSETS} from './config.js';
 export const PROGRAM='9fhQBbumKEFuXtMBDw8AaQyAjCorLGJQiS3skWZdQyQD';
 export const RELAYER='https://api3.privacycash.org';
 export const SIGN_MESSAGE='Privacy Money account sign in';
 export function depositSolReserve(index){return index===0?205000n:2000000n;}
 export function sameWithdrawalFees(current,approved,index){
- const rent=c=>index===0?c.withdraw_rent_fee:c.rent_fees?.usdc;
- return current.withdraw_fee_rate===approved.withdraw_fee_rate&&rent(current)===rent(approved)&&current.minimum_withdrawal?.[index===0?'sol':'usdc']===approved.minimum_withdrawal?.[index===0?'sol':'usdc'];
+ const asset=ASSETS[index];if(!asset)return false;const key=asset.symbol.toLowerCase();
+ const rent=c=>asset.mint?c.rent_fees?.[key]:c.withdraw_rent_fee;
+ return current.withdraw_fee_rate===approved.withdraw_fee_rate&&rent(current)===rent(approved)&&current.minimum_withdrawal?.[key]===approved.minimum_withdrawal?.[key];
 }
 export function checkedNumber(n){if(n<0n||n>BigInt(Number.MAX_SAFE_INTEGER))throw new Error('Amount exceeds the protocol SDK precision limit.');return Number(n);}
 export function withdrawalQuote(gross,rate,rent,decimals){

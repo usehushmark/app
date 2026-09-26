@@ -13,7 +13,7 @@ import {createWalletTools} from './wallet-tools-view.js';
 import {validatePaymentRequest,quoteRequestedNet} from './payment-request.js';
 import {activityStatusLabel,digestProof,verifyActivityStatus} from './activity-status.js';
 const $=id=>document.getElementById(id),rawFetch=globalThis.fetch.bind(globalThis);
-let owner=null,provider=null,enc=null,wasm=null,storage=null,notes=[null,null],publicBalances=[null,null],epoch=0,busy=false,review=null,operation=null,abort=new AbortController(),hidden=false;
+let owner=null,provider=null,enc=null,wasm=null,storage=null,notes=ASSETS.map(()=>null),publicBalances=ASSETS.map(()=>null),epoch=0,busy=false,review=null,operation=null,abort=new AbortController(),hidden=false;
 let formRevision=0,lastPayment=null,activity=null,activityRecords=[],selectedRequest=null;
 const idle=createIdleSession({onExpire:()=>{lock();message('Session auto-locked after inactivity. A submitted payment may still complete; unlock and check its status before retrying.');}});
 let walletTools;
@@ -28,7 +28,7 @@ function guard(version=epoch){if(owner&&enc)idle.check();if(!owner||!enc||versio
 function controls(value){busy=value;activityView.setBusy(value);document.querySelectorAll('[data-action]').forEach(el=>el.disabled=value);$('lock').disabled=false;}
 function resetReview(){formRevision++;review=null;$('acknowledge').checked=false;$('payment-review').hidden=true;}
 function clearTransaction(){lastPayment=null;$('transaction').hidden=true;$('tx-link').removeAttribute('href');$('tx-link').textContent='';$('tx-state').textContent='';delete $('check-status').dataset.signature;}
-function lock(){idle.stop();walletTools?.lock();detachRequest();for(const id of ['review-action','review-amount','review-recipient','review-fee','review-net'])$(id).textContent='';provider?.removeListener?.('accountChanged',onAccount);provider?.removeListener?.('disconnect',onAccount);epoch++;abort.abort();abort=new AbortController();enc?.resetEncryptionKey();enc=null;owner=null;storage=null;activity?.close();activity=null;activityRecords=[];activityView.lock();clearTransaction();notes=[null,null];publicBalances=[null,null];resetReview();$('owner').textContent='Wallet not connected';$('unlock-state').textContent='LOCKED';render();message('Privacy session locked. Keys have been discarded from memory.');}
+function lock(){idle.stop();walletTools?.lock();detachRequest();for(const id of ['review-action','review-amount','review-recipient','review-fee','review-net'])$(id).textContent='';provider?.removeListener?.('accountChanged',onAccount);provider?.removeListener?.('disconnect',onAccount);epoch++;abort.abort();abort=new AbortController();enc?.resetEncryptionKey();enc=null;owner=null;storage=null;activity?.close();activity=null;activityRecords=[];activityView.lock();clearTransaction();notes=ASSETS.map(()=>null);publicBalances=ASSETS.map(()=>null);resetReview();$('owner').textContent='Wallet not connected';$('unlock-state').textContent='LOCKED';render();message('Privacy session locked. Keys have been discarded from memory.');}
 
 async function loadActivity(version=epoch){
  const journal=activity;if(!journal)return;
@@ -86,7 +86,14 @@ async function unlock(){
  await loadActivity(version);await publicRefresh();message('Unlocked. Sync private balances to scan existing notes, or deposit to the pool.');
 }
 function onAccount(){lock();}
-async function publicRefresh(){guard();const version=epoch,key=owner;const sol=await connection.getBalance(key);const address=await getAssociatedTokenAddress(new PublicKey(ASSETS[1].mint),key),info=await connection.getAccountInfo(address);guard(version);publicBalances=[BigInt(sol),info?unpackAccount(address,info,TOKEN_PROGRAM_ID).amount:0n];render();}
+async function publicRefresh(){
+ guard();const version=epoch,key=owner;
+ const balances=await Promise.all(ASSETS.map(async asset=>{
+  if(!asset.mint)return BigInt(await connection.getBalance(key));
+  const mint=new PublicKey(asset.mint),address=await getAssociatedTokenAddress(mint,key),info=await connection.getAccountInfo(address);if(!info)return 0n;
+  const account=unpackAccount(address,info,TOKEN_PROGRAM_ID);if(!account.mint.equals(mint)||!account.owner.equals(key))throw new Error('Token balance account does not match the selected wallet and mint.');return account.amount;
+ }));guard(version);publicBalances=balances;render();
+}
 async function scan(index){guard();const version=epoch;message('Scanning encrypted '+ASSETS[index].symbol+' notes. No balance is assumed before the scan finishes.');const params={connection,publicKey:owner,encryptionService:enc,storage,abortSignal:abort.signal};const result=index===0?await sdk.getUtxos(params):await sdk.getUtxosSPL({...params,mintAddress:ASSETS[index].mint});guard(version);notes[index]=result;render();return result;}
 async function prepare(){
  guard();resetReview();const revision=formRevision,version=epoch;const index=Number($('asset').value),asset=ASSETS[index],type=$('operation').value,recipientInput=$('recipient').value.trim(),request=selectedRequest?validatePaymentRequest(selectedRequest):null;let gross=parseUnits($('amount').value,asset.decimals);if(request&&(type!=='withdraw'||request.asset!==asset.symbol||request.recipient!==recipientInput||request.amount!==formatUnits(gross,asset.decimals)))throw new Error('Request details changed. Apply the request again.');await network();guard(version);
@@ -96,13 +103,13 @@ async function prepare(){
  if(type==='withdraw'){
   try{recipient=new PublicKey(recipientInput).toBase58();if(!PublicKey.isOnCurve(new PublicKey(recipient).toBytes()))throw 0;}catch{throw new Error('Enter a valid recipient wallet address.');}
   if(recipient===owner.toBase58())throw new Error('Choose a different recipient wallet. Withdrawing back to the funding wallet defeats unlinkability.');
-  if(request){const quote=quoteRequestedNet(gross,config.withdraw_fee_rate,index===0?config.withdraw_rent_fee:config.rent_fees?.usdc,asset.decimals);gross=quote.gross;}
+  if(request){const quote=quoteRequestedNet(gross,config.withdraw_fee_rate,index===0?config.withdraw_rent_fee:config.rent_fees?.[asset.symbol.toLowerCase()],asset.decimals);gross=quote.gross;}
   const available=await scan(index),largest=available.map(n=>BigInt(n.amount.toString())).sort((a,b)=>a>b?-1:a<b?1:0).slice(0,2).reduce((a,b)=>a+b,0n);
   if(gross>largest)throw new Error('Amount exceeds what two available notes can cover. Choose a smaller withdrawal; partial sends are blocked.');
-  const rate=await sdk.getConfig('withdraw_fee_rate'),rent=index===0?await sdk.getConfig('withdraw_rent_fee'):(await sdk.getConfig('rent_fees')).usdc;
-  if(rate!==config.withdraw_fee_rate||rent!==(index===0?config.withdraw_rent_fee:config.rent_fees.usdc))throw new Error('Protocol fees changed. Reload before reviewing.');
+  const rate=await sdk.getConfig('withdraw_fee_rate'),rent=index===0?await sdk.getConfig('withdraw_rent_fee'):(await sdk.getConfig('rent_fees'))[asset.symbol.toLowerCase()];
+  if(rate!==config.withdraw_fee_rate||rent!==(index===0?config.withdraw_rent_fee:config.rent_fees?.[asset.symbol.toLowerCase()]))throw new Error('Protocol fees changed. Reload before reviewing.');
   ({fee,net}=withdrawalQuote(gross,rate,rent,asset.decimals));const min=config.minimum_withdrawal?.[asset.symbol.toLowerCase()];if(!Number.isFinite(min)||checkedNumber(gross)/10**asset.decimals<min)throw new Error('Amount is below the protocol withdrawal minimum.');
- }else{await publicRefresh();if(publicBalances[index]<gross)throw new Error('Insufficient public wallet balance.');if(publicBalances[0]<depositSolReserve(index)+(index===0?gross:0n))throw new Error(index===0?'Keep at least 0.000205 SOL in addition to the deposit for network fees.':'Keep at least 0.002 SOL in the public wallet for a USDC deposit, as required by the protocol SDK.');}
+ }else{await publicRefresh();if(publicBalances[index]<gross)throw new Error('Insufficient public wallet balance.');if(publicBalances[0]<depositSolReserve(index)+(index===0?gross:0n))throw new Error(index===0?'Keep at least 0.000205 SOL in addition to the deposit for network fees.':'Keep at least 0.002 SOL in the public wallet for a token deposit, as required by the protocol SDK.');}
  guard(version);if(revision!==formRevision)throw new Error('Payment details changed during review. Review the current details again.');review={type,asset,index,gross,fee,net,recipient,version,created:Date.now(),feeConfig:config,request};
  $('review-action').textContent=type==='deposit'?'Deposit to private pool':'Withdraw from private pool';$('review-amount').textContent=formatUnits(gross,asset.decimals)+' '+asset.symbol;$('review-recipient').textContent=type==='deposit'?PROGRAM:recipient;$('review-fee').textContent=type==='deposit'?'Network fee shown in your wallet; maximum 0.000205 SOL':formatUnits(fee,asset.decimals)+' '+asset.symbol;$('review-net').textContent=formatUnits(net,asset.decimals)+' '+asset.symbol;$('payment-review').hidden=false;message('Review the amount and destination. Deposit/withdrawal amounts remain public onchain.');
 }

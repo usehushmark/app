@@ -1,6 +1,6 @@
 # Hushmark privacy integration
 
-The current product is a private-payment interface on Solana using Privacy Cash SDK 1.2.2. It replaces the public-transfer-first pages, not the underlying source history. HUSHM is the project token; the integrated private pool supports SOL and USDC only.
+The current product is a private-payment interface on Solana using Privacy Cash SDK 1.2.2. It replaces the public-transfer-first pages, not the underlying source history. HUSHM is the project token; the integrated private pool supports SOL, USDC and USDT.
 
 ## Run
 
@@ -13,7 +13,7 @@ Current page generator: generate-privacy.mjs. Browser source: src/privacy.js, sr
 - Phantom/Solflare software-wallet unlock with two verified, identical protocol-message signatures and a local recovery fingerprint.
 - SDK-derived keys only in memory; no recovery-phrase collection and no signature upload.
 - Account-scoped tab cache for encrypted notes/scan offsets; explicit private-note sync and actual unspent-note balances.
-- SOL/USDC SDK deposit/withdraw paths, bundled ZK proving assets, reviewed fee/net outcome.
+- SOL/USDC/USDT SDK deposit/withdraw paths, bundled ZK proving assets, reviewed fee/net outcome.
 - Exact relay recipient/mint/amount/fee checks; partial withdrawals blocked.
 - Deposit message verification, protocol-program allowlist, amount matching, fee ceiling, preflight and wallet signature verification.
 - Actual genesis/program checks and distinct submitted/not-found/failed/finalized states.
@@ -23,7 +23,7 @@ Current page generator: generate-privacy.mjs. Browser source: src/privacy.js, sr
 
 - Download an encrypted history JSON file, preview its record counts, and merge it with the same wallet on another browser or domain. New restored transaction statuses require a fresh manual check. No history upload or backend is involved.
 - Idle auto-lock defaults to 5 minutes, with 15 and 30 minute choices. It also checks expiry on return to a background tab and before guarded actions. Already submitted transactions may still settle; uncertain activity is not labeled safely retryable.
-- Create SOL/USDC payment requests as links and downloadable QR images. The unsigned link exposes recipient, net amount and expiry to anyone with it. It never auto-connects or submits. The payer explicitly applies it and reviews gross debit/current fees; manual edits detach it.
+- Create SOL/USDC/USDT payment requests as links and downloadable QR images. The unsigned link exposes recipient, net amount and expiry to anyone with it. It never auto-connects or submits. The payer explicitly applies it and reviews gross debit/current fees; manual edits detach it.
 - Check selected mainnet RPC, executable protocol program and valid protocol fee configuration. This is point-in-time availability, not a security audit or settlement guarantee.
 
 Source modules: `src/private-activity.js`, `src/idle-session.js`, `src/payment-request.js`, `src/service-status.js`, `src/wallet-tools-view.js`. Current public navigation, CA controls and whitepaper are preserved in `templates/` and `dist/`. See `WALLET-TOOLS-HANDOFF.md` for deployment and acceptance steps.
@@ -68,3 +68,10 @@ The bundled SDK includes third-party cryptographic components with their own lic
 ## Functional audit update (2026-09-22)
 
 See VERIFICATION.md for the current test record and repeat commands. SOL and USDC proof flows, synthetic-note recovery after reload, cancellation/account-change controls and mismatched withdrawal receipt rejection passed browser checks. The relay and finality responses in those automated tests were fixtures. Browser regression scripts are preserved in tests/browser and require a Playwright runtime.
+
+
+## USDT extension (v5)
+
+USDT uses Solana mint `Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB`, six decimals and the legacy SPL Token program supported by Privacy Cash SDK 1.2.2. Asset selection, public/private balances, deposit, withdrawal, net-amount requests, encrypted history and backup restoration include USDT. Its fees and minimum are read from `usdt` configuration entries, never copied from USDC. HUSHM remains unsupported in the private pool.
+
+Read `USDT-HANDOFF.md` and the latest section of `VERIFICATION.md` before deployment. v5 can read earlier SOL/USDC activity backups; older v4 code cannot read backups containing USDT, so upgrade both devices before restoring those files.

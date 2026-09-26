@@ -1,3 +1,4 @@
+const requestedAsset=process.env.AUDIT_ASSET==='USDT'?'USDT':'USDC';
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import {mkdirSync,readFileSync} from 'node:fs';
@@ -19,7 +20,7 @@ const deposit = {
   updatedAt: createdAt, status: 'submitted', signature: bs58.encode(new Uint8Array(64).fill(4)),
 };
 const withdrawal = {
-  id: '616e9b73-9460-471e-a8b6-f37992063222', type: 'withdraw', asset: 'USDC',
+  id: '616e9b73-9460-471e-a8b6-f37992063222', type: 'withdraw', asset: requestedAsset,
   amount: '87654321', netAmount: '87653445', fee: '876', createdAt: createdAt + 1,
   updatedAt: createdAt + 1, status: 'submitted', signature: bs58.encode(new Uint8Array(64).fill(5)), proofDigest,
 };
@@ -62,7 +63,7 @@ const errors = [], blocked = [], rpcCalls = [];
 let withdrawalReceipt = 'missing',offlineFees=false;
 const statuses = new Map();
 const status = (confirmationStatus, err = null) => ({slot: 100, confirmations: confirmationStatus === 'finalized' ? null : 1, confirmationStatus, err});
-const config = {withdraw_fee_rate: .0035, withdraw_rent_fee: .006, rent_fees: {usdc: .7}, minimum_withdrawal: {sol: .01, usdc: 2}};
+const config = {withdraw_fee_rate: .0035, withdraw_rent_fee: .006, rent_fees: {usdc: .7,usdt:.9}, minimum_withdrawal: {sol: .01, usdc: 2,usdt:3}};
 page.on('pageerror', error => errors.push(error.message));
 
 await page.addInitScript({content: `
@@ -140,11 +141,11 @@ try{
  const bad=JSON.parse(backup);bad.owner='2'.repeat(32);await page.locator('#activity-import-file').setInputFiles({name:'bad.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(bad))});await page.waitForFunction(()=>document.getElementById('backup-state').textContent.includes('different wallet'));assert.equal(await page.locator('[data-activity-id]').count(),2);
  console.log('Backup download, restore, duplicate merge and wrong-wallet rejection passed.');
  const recipient=Keypair.fromSeed(new Uint8Array(32).fill(8)).publicKey.toBase58();
- await page.locator('#request-recipient').fill(recipient);await page.locator('#request-amount').fill('2');await page.locator('#request-asset').selectOption('USDC');await page.locator('#request-create').click();await page.waitForFunction(()=>!document.getElementById('request-result').hidden);
+ await page.locator('#request-recipient').fill(recipient);await page.locator('#request-amount').fill('2');await page.locator('#request-asset').selectOption(requestedAsset);await page.locator('#request-create').click();await page.waitForFunction(()=>!document.getElementById('request-result').hidden);
  const link=await page.locator('#request-link').inputValue();assert.ok(link.startsWith(base.origin+'/wallet/#pay='));assert.ok(await page.locator('#request-qr').evaluate(img=>img.naturalWidth===520));
  const qrEvent=page.waitForEvent('download');await page.locator('#request-download').click();await (await qrEvent).saveAs('qa/request-qr.png');
  await page.goto("about:blank");await page.goto(link);await page.waitForFunction(()=>!document.getElementById('incoming-request').hidden);assert.equal(new URL(page.url()).hash,'');assert.equal(await page.evaluate(()=>window.fixtureSigns||0),0);assert.equal(await page.locator('#unlock-state').textContent(),'LOCKED');
- await page.locator('#request-use').click();assert.match(await page.locator('#request-incoming-state').textContent(),/locked/i);await unlock();await page.locator('#request-use').click();assert.equal(await page.locator('#operation').inputValue(),'withdraw');assert.equal(await page.locator('#asset').inputValue(),'1');assert.equal(await page.locator('#amount').inputValue(),'2');assert.equal(await page.locator('#recipient').inputValue(),recipient);assert.match(await page.locator('label[for=amount]').textContent(),/Recipient amount/);
+ await page.locator('#request-use').click();assert.match(await page.locator('#request-incoming-state').textContent(),/locked/i);await unlock();await page.locator('#request-use').click();assert.equal(await page.locator('#operation').inputValue(),'withdraw');assert.equal(await page.locator('#asset').inputValue(),requestedAsset==='USDT'?'2':'1');assert.equal(await page.locator('#amount').inputValue(),'2');assert.equal(await page.locator('#recipient').inputValue(),recipient);assert.match(await page.locator('label[for=amount]').textContent(),/Recipient amount/);
  await page.locator('#amount').fill('3');assert.equal(await page.locator('label[for=amount]').textContent(),'Amount debited');
  console.log('QR/download/link parsing and explicit request application passed; no auto-unlock/payment.');
  await page.locator('#service-check').click();await page.waitForFunction(()=>!document.getElementById('service-check').disabled);assert.equal(await page.locator('.service-badge[data-state=available]').count(),3);

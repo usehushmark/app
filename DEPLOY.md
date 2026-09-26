@@ -17,7 +17,7 @@ Set the publish/output directory to `dist`. For local inspection: `pnpm start`, 
 
 ## Nixpacks with static-site mode
 
-Use the source archive `Hushmark-Nixpacks-Deploy-v4.zip`. Extract its contents into the root of the repository connected to the hosting panel, including `nixpacks.toml`, `package.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`, and `dist/`. Keep the authored images, styles, and proof assets in `dist/`; the build does not recreate every authored asset from scratch.
+Use the source archive `Hushmark-Nixpacks-Deploy-v5.zip`. Extract its contents into the root of the repository connected to the hosting panel, including `nixpacks.toml`, `package.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`, and `dist/`. Keep the authored images, styles, and proof assets in `dist/`; the build does not recreate every authored asset from scratch.
 
 For a panel with Coolify-style settings:
 
@@ -49,7 +49,7 @@ References: https://coolify.io/docs/applications/builds/nixpacks/deploy and http
 
 ## Cloudflare Pages direct upload
 
-If using Cloudflare Pages itself instead of a Nixpacks hosting panel, use `Hushmark-Static-Deploy-v4.zip`. It contains the final assets with `index.html` at the archive root. Upload that ZIP in a Pages Direct Upload project; no install or build command is needed. A Git-integrated Pages project instead uses the source build and output directory `dist`.
+If using Cloudflare Pages itself instead of a Nixpacks hosting panel, use `Hushmark-Static-Deploy-v5.zip`. It contains the final assets with `index.html` at the archive root. Upload that ZIP in a Pages Direct Upload project; no install or build command is needed. A Git-integrated Pages project instead uses the source build and output directory `dist`.
 
 Reference: https://developers.cloudflare.com/pages/get-started/direct-upload/.
 
@@ -63,3 +63,5 @@ Read `WALLET-TOOLS-HANDOFF.md`. This update has not been published by the develo
 Serve over HTTPS, purge stale HTML/JavaScript/CSS caches together after deployment, and check `/wallet/`, `/docs/`, `/roadmap/`, and the existing whitepaper link. No new backend, database, API secret, or token mint is required for these four features. A host-injected analytics script is not included in the ZIP; review any analytics enabled separately in your hosting panel.
 
 Portable v4 verification on 2026-09-26: a fresh source copy installed its 264 locked packages, built with Node 24.19.0/pnpm 11.19.0, passed all 33 unit tests and produced 29 static files identical to the working build. No Docker/Nixpacks container was run locally.
+
+For the latest USDT extension, read `USDT-HANDOFF.md`. Deploy the v5 archive; v4 has only SOL/USDC.

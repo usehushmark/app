@@ -15,7 +15,6 @@
     "@lightprotocol/hasher.rs": "0.2.1",
     "@solana/spl-token": "0.4.14",
     "@solana/web3.js": "1.98.4",
-    "@web3icons/react": "4.1.22",
     "assert": "2.1.0",
     "bs58": "6.0.0",
     "buffer": "6.0.3",
@@ -24,14 +23,15 @@
     "privacycash": "1.2.2",
     "process": "0.11.10",
     "qrcode": "1.5.4",
-    "react": "19.3.0",
-    "react-dom": "19.3.0",
-    "react-icons": "5.7.0",
     "stream-browserify": "3.0.0",
     "tweetnacl": "1.0.3",
     "util": "0.12.5"
   },
   "devDependencies": {
-    "esbuild": "0.25.10"
+    "@web3icons/react": "4.1.22",
+    "esbuild": "0.25.10",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "react-icons": "5.7.0"
   }
 }

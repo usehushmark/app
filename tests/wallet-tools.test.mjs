@@ -33,7 +33,7 @@ test('activity resets inactivity; shortening timeout checks deadline; stop disca
  const f=idleFixture();f.idle.setMinutes(15);f.idle.start();f.advance(4*60000);f.idle.touch();f.advance(4*60000);assert.equal(f.idle.check(),true);f.advance(60000);f.idle.setMinutes(5);assert.equal(f.expired(),1);
  f.idle.start();f.idle.stop();f.advance(30*60000);f.fire();assert.equal(f.expired(),1);assert.throws(()=>f.idle.setMinutes(0));
 });
-const fees={withdraw_fee_rate:.0035,withdraw_rent_fee:.006,rent_fees:{usdc:.7},minimum_withdrawal:{sol:.01,usdc:2}};
+const fees={withdraw_fee_rate:.0035,withdraw_rent_fee:.006,rent_fees:{usdc:.7,usdt:.9},minimum_withdrawal:{sol:.01,usdc:2,usdt:3}};
 function services(options={}){const calls=[];return {calls,fetch:async(url,init)=>{calls.push({url,init});if(options.offline)throw new Error('offline');if(init?.method==='POST'){const {method}=JSON.parse(init.body);return Response.json({result:method==='getGenesisHash'?(options.wrong?'wrong':GENESIS):method==='getSlot'?123:{value:{executable:!options.noProgram}}});}return Response.json(options.badFees?{}:fees);}};}
 test('service checks verify mainnet, program and fees using read calls only',async()=>{
  const f=services(),r=await checkServices({rpc:'https://rpc.example',fetch:f.fetch});assert.deepEqual(Object.values(r).map(x=>x.status),['available','available','available']);
@@ -47,4 +47,15 @@ test('wrong network never shows an available program and independent failures re
 test('aborted service check does not publish stale results',async()=>{
  const c=new AbortController();c.abort();let published=0;
  const r=await checkServices({rpc:'https://rpc.example',signal:c.signal,fetch:async()=>{throw c.signal.reason;},onResult:()=>published++});assert.equal(published,0);assert.ok(Object.values(r).every(x=>x.status==='unavailable'));
+});
+
+test('USDT requests preserve six-decimal precision and exact net amount',()=>{
+ const link=createPaymentRequestLink({...request,asset:'USDT',amount:'5.123456'},'https://hushmark.io',now);
+ assert.equal(parsePaymentRequest(new URL(link).hash,now).asset,'USDT');assert.equal(parsePaymentRequest(new URL(link).hash,now).amount,'5.123456');
+ assert.throws(()=>validatePaymentRequest({...request,asset:'USDT',amount:'5.1234567'},now));
+ assert.equal(quoteRequestedNet(5123456n,.0035,.9,6).net,5123456n);
+});
+test('service readiness requires a USDT rent and minimum as well as existing assets',async()=>{
+ const fetch=async(url,init)=>init?.method==='POST'?Response.json({result:JSON.parse(init.body).method==='getGenesisHash'?GENESIS:JSON.parse(init.body).method==='getSlot'?100:{value:{executable:true}}}):Response.json({...fees,rent_fees:{usdc:.7}});
+ const r=await checkServices({rpc:'https://rpc.example',fetch});assert.equal(r.relayer.status,'unavailable');assert.equal(r.rpc.status,'available');
 });

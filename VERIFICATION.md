@@ -2,6 +2,18 @@
 
 This records the owner's real-asset testing report and the separate automated implementation checks. It is not an independent security audit.
 
+## USDT extension v5 — 2026-09-26
+
+- Added USDT mint `Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB`, six decimals, to the existing Solana integration. SDK 1.2.2 registers the mint; finalized account reads found its legacy SPL mint and protocol-owned tree. Relayer config supplies USDT-specific rent and minimum values. Read-only evidence is recorded by `scripts/check-usdt-support.mjs`.
+- All 37 unit tests passed, including USDT fee/minimum isolation, exact net-amount requests, six-decimal validation, fee-service readiness and mixed SOL/USDC/USDT encrypted backup restoration. Existing tests continue passing.
+- The browser wallet-tools suite passed with USDT requests and USDT journal fixtures: QR, explicit request application, expiry, encrypted export/import, owner mismatch, idle lock and service failures. Existing state/activity browser suites passed.
+- USDT deposit and request-based withdrawal passed using actual SDK proof generation, intercepted submission, fixture finality, exact mint/net amount checks, encrypted activity, same-wallet reload and mismatched-proof rejection. No funded USDT transaction was sent.
+- The initial live-read-dependent tests encountered public RPC timeouts and a transient missing lookup-table result. Both public RPCs later returned the lookup table. USDT passed on a sequential retry. The optional `AUDIT_RPC` and `AUDIT_NODE_RPC=1` test transport isolates browser-origin transport issues by forwarding only `get*` RPC reads from Node. It does not change the application RPC setting or forward financial writes. SOL and USDC deposit/request-withdrawal regressions then both passed using the alternate mainnet RPC with Node read transport; their signing, proofs, journal and receipt checks still ran in the browser. Submissions and finality remained intercepted fixtures.
+- Desktop (1440px) wallet and mobile (390px) request/QR layouts were visually inspected without horizontal overflow.
+- A clean source copy installed 264 pinned packages with Node 24.19.0/pnpm 11.19.0, built successfully and passed all 37 unit tests. All 29 static assets matched the working build byte-for-byte. Docker/Nixpacks execution itself was not tested on this Windows host.
+
+USDT is implemented locally and packaged for deployment, not independently audited or verified by a new funded mainnet test. Public RPC availability remains a real dependency. Deploy v5 before importing USDT-containing backups; v4 does not understand the added asset. No production deployment was performed.
+
 ## Wallet tools v4 — 2026-09-26
 
 - 33 unit tests passed. Added same-wallet encrypted backup portability, non-destructive rejection of wrong-wallet/corrupt/conflicting files, duplicate merge, 100-record retention, restored status downgrading and lock-during-restore protection. Existing encryption and payment checks remain passing.
@@ -69,7 +81,8 @@ Start `node serve.mjs` separately. Provide Playwright through PLAYWRIGHT_MODULE 
 - `node tests/browser/idle-submission.mjs`
 - `node tests/browser/deposit.mjs`
 - `node tests/browser/withdraw.mjs`
-- Repeat deposit and withdraw with `AUDIT_ASSET=USDC`. Set `AUDIT_REQUEST=1` for request-based SOL/USDC withdrawals.
+- Repeat deposit and withdraw with `AUDIT_ASSET=USDC` and `AUDIT_ASSET=USDT`. Set `AUDIT_REQUEST=1` for request-based SOL/USDC withdrawals.
 - `node tests/browser/live-readonly.cjs`
+- For diagnostic read transport only: set `AUDIT_RPC=https://api.mainnet-beta.solana.com` and `AUDIT_NODE_RPC=1` for deposit/withdraw scripts. This forwards only reads; it is not a production transport change.
 
 The browser payment tests create throwaway fixture wallets and intercept all financial submissions. Their finalized labels must never be reported as mainnet settlements.

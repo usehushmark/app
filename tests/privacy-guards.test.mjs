@@ -21,3 +21,14 @@ test('relay payload cannot change recipient, amount, fee or token after approval
 test('encrypted note caches are separated by owner',()=>{
  const map=new Map(),storage={getItem:k=>map.get(k)||null,setItem:(k,v)=>map.set(k,v),removeItem:k=>map.delete(k)},a=scopedStorage(storage,'a'),b=scopedStorage(storage,'b');a.setItem('notes','encrypted');assert.equal(a.getItem('notes'),'encrypted');assert.equal(b.getItem('notes'),null);
 });
+
+test('USDT uses its own fee and minimum; USDC changes do not alter USDT approval',()=>{
+ const c={withdraw_fee_rate:.0035,withdraw_rent_fee:.006,rent_fees:{usdc:.7,usdt:.9},minimum_withdrawal:{sol:.01,usdc:2,usdt:3}};
+ assert.equal(sameWithdrawalFees(c,c,2),true);
+ assert.equal(sameWithdrawalFees({...c,rent_fees:{...c.rent_fees,usdt:1}},c,2),false);
+ assert.equal(sameWithdrawalFees({...c,minimum_withdrawal:{...c.minimum_withdrawal,usdt:4}},c,2),false);
+ assert.equal(sameWithdrawalFees({...c,rent_fees:{...c.rent_fees,usdc:1}},c,2),true);
+ assert.equal(sameWithdrawalFees({...c,rent_fees:{usdc:.7}},c,2),false);
+ assert.equal(sameWithdrawalFees(c,c,9),false);assert.equal(depositSolReserve(2),2000000n);
+ const q=withdrawalQuote(5000000n,c.withdraw_fee_rate,c.rent_fees.usdt,6);assert.equal(q.fee,917500n);assert.equal(q.net,4082500n);
+});
