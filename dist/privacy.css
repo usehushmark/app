@@ -29,4 +29,24 @@
 .journal-description{color:var(--muted);font-size:15px;margin:16px 0 24px}.journal-list{list-style:none;padding:0;margin:0}.journal-row{display:grid;grid-template-columns:1.1fr 1fr 1.2fr;gap:16px 24px;border-top:1px solid var(--line);padding:24px 0;align-items:start}.journal-identity{display:flex;gap:14px;align-items:center}.journal-icon{display:grid;place-items:center;background:#ff304515;color:var(--accent);width:40px;height:40px;flex-shrink:0;border:1px solid #ff304530;border-radius:10px;font-size:22px}.journal-identity h3{font-size:16px;margin:0 0 6px;letter-spacing:0}.journal-identity time{font-size:12px;color:var(--muted)}.journal-amount strong{font-size:18px;display:block;font-weight:600;overflow-wrap:anywhere}.journal-row small{display:block;color:var(--muted);font-size:12px;line-height:1.5;margin-top:5px}.journal-badge{font-size:12px;display:inline-block;padding:5px 9px;border:1px solid #46505c;border-radius:5px;color:#c5ccd5;line-height:1.45}.journal-badge[data-status=finalized]{color:#92cfb2;border-color:#28483b}.journal-badge[data-status=failed],.journal-badge[data-status=proof-mismatch]{color:#ff8892;border-color:#793b43}.journal-row-actions{grid-column:2 / -1;display:flex;gap:20px}.journal-row-actions .text-link{font-size:12px;background:none;border:0;padding:0;cursor:pointer;color:var(--muted)}.journal-row-actions .text-link:hover{color:#fff}
 #activity-state{padding:20px 0;color:var(--muted);font-size:14px;line-height:1.6;margin:0}#activity-state.journal-warning{color:#e9ad9b}.journal-footnote{font-size:12px;color:var(--muted);line-height:1.7;border-top:1px solid var(--line);padding-top:20px;margin:4px 0 0}.journal-footnote a{white-space:nowrap}.journal-clear-confirm{border:1px solid #65363d;background:#211317;padding:20px;margin-bottom:22px;border-radius:8px}.journal-clear-confirm h3{font-size:17px;margin:0 0 8px}.journal-clear-confirm p{font-size:14px;line-height:1.6;color:var(--muted);margin:0 0 18px}
 .private-activity [hidden]{display:none!important}
-@media(max-width:800px){.private-activity{padding:22px 18px;margin-top:28px}
+@media(max-width:800px){.private-activity{padding:22px 18px;margin-top:28px}.journal-heading{align-items:flex-start;flex-direction:column;gap:18px}.journal-heading h2{font-size:28px}.journal-row{grid-template-columns:1fr 1fr;gap:18px 12px}.journal-identity{grid-column:1 / -1}.journal-result{min-width:0}.journal-row-actions{grid-column:1 / -1}.journal-amount strong{font-size:16px}.journal-badge{font-size:11px}.journal-description{font-size:14px}.journal-toolbar{gap:14px}.journal-toolbar .secondary-button{font-size:13px}}
+/* Local wallet tools: isolated from legacy activity and payment styles. */
+.wallet-tools{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:32px 0 64px}
+.tool-card,.incoming-request{padding:32px;border:1px solid var(--line,#292d34);border-radius:12px;background:#0e1116;min-width:0}
+.tool-card h2,.incoming-request h2{font-size:clamp(25px,3vw,36px);line-height:1.15;margin:10px 0 20px}
+.tool-card h2 span{color:#ff3348}
+.tool-card p,.incoming-request p,.journal-backup p{color:var(--muted,#a5adb9);line-height:1.6;overflow-wrap:anywhere}
+.tool-card label,.session-settings label{display:block;margin:18px 0 8px;font-size:14px}
+.tool-card input,.tool-card select,.session-settings select{display:block;width:100%;min-width:0;box-sizing:border-box;padding:12px;background:#11151b;color:#f4f5f8;border:1px solid #353a44;border-radius:6px;font:inherit}
+.tool-card .button{margin-top:20px}.tool-card .text-link{margin-top:10px}
+.tool-fields{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.tool-card #request-qr{display:block;width:min(260px,100%);height:auto;margin:24px auto;background:white;border-radius:4px}
+.service-list{margin:24px 0}.service-list>div{display:block;padding:20px 0;border-bottom:1px solid #292d34}
+.service-list dt{font-weight:600;margin-bottom:12px}.service-list dd{margin:0}.service-list dd p{font-size:13px;margin:10px 0 0}
+.service-badge{display:inline-block;padding:5px 10px;border:1px solid #474c55;border-radius:20px;font-size:12px;color:#b8bfcb}
+.service-badge[data-state=available]{color:#9ce0ba;border-color:#31583f}.service-badge[data-state=unavailable]{color:#ff8d98;border-color:#6f333d}
+.session-settings{margin:22px 0;padding-top:12px;border-top:1px solid #292d34}.session-settings .field-help{font-size:12px}
+.journal-backup{border-top:1px solid #292d34;margin-top:24px;padding-top:24px}.journal-backup h3{font-size:18px}.journal-backup p{font-size:14px}
+.incoming-request{margin-bottom:24px}.incoming-request #incoming-details{font-family:monospace;color:#f4f5f8}
+.wallet-tools button:focus-visible,.session-settings select:focus-visible,.incoming-request button:focus-visible{outline:2px solid #ff3348;outline-offset:4px}
+@media(max-width:800px){.wallet-tools{grid-template-columns:1fr}.tool-card,.incoming-request{padding:22px}.tool-fields{gap:12px}}

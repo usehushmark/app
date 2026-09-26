@@ -19,6 +19,7 @@ export function createActivityView() {
     list.replaceChildren();
     $('activity-toggle').hidden = locked;
     $('activity-clear').hidden = locked;
+    $('activity-backup').hidden = locked;
     $('activity-toggle').textContent = visible ? 'Hide history' : 'Show history';
     $('activity-toggle').setAttribute('aria-expanded', String(!locked && visible));
     $('activity-state').textContent = locked ? 'Unlock your wallet to read its local history.'
@@ -31,9 +32,9 @@ export function createActivityView() {
       const row = node('li', undefined, 'journal-row');
       row.dataset.activityId = record.id;
       const identity = node('div', undefined, 'journal-identity');
-      identity.append(node('span', record.type === 'deposit' ? '↘' : '↗', 'journal-icon'));
+      identity.append(node('span', record.type === 'deposit' ? 'â†˜' : 'â†—', 'journal-icon'));
       const info = node('div');
-      info.append(node('h3', `${record.type === 'deposit' ? 'Deposit' : 'Withdrawal'} · ${record.asset}`));
+      info.append(node('h3', `${record.type === 'deposit' ? 'Deposit' : 'Withdrawal'} Â· ${record.asset}`));
       const time = node('time', new Date(record.createdAt).toLocaleString(undefined, {dateStyle: 'medium', timeStyle: 'short'}));
       time.dateTime = new Date(record.createdAt).toISOString();
       info.append(time);
@@ -56,7 +57,7 @@ export function createActivityView() {
         refresh.dataset.action = '';
         refresh.disabled = busy;
         refresh.setAttribute('aria-label', `Refresh ${record.type} status from ${new Date(record.createdAt).toLocaleString()}`);
-        const link = node('a', 'Explorer ↗', 'text-link');
+        const link = node('a', 'Explorer â†—', 'text-link');
         link.href = 'https://explorer.solana.com/tx/' + record.signature;
         link.target = '_blank';
         link.rel = 'noopener noreferrer';

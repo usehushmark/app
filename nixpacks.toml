@@ -1,0 +1,18 @@
+# Build from source, then enable the hosting panel's static-site mode.
+# Publish directory: /dist. The static web server uses port 80.
+providers = ["node"]
+
+[phases.setup]
+# Explicit archive/package selection also avoids old Node auto-detection.
+# This archive is the Node 24 archive used by upstream Nixpacks.
+nixPkgs = ["nodejs_24"]
+nixOverlays = []
+nixpkgsArchive = "23f9169c4ccce521379e602cc82ed873a1f1b52b"
+
+[phases.install]
+# Use the tested package manager directly; older Nixpacks can select pnpm 9.
+# Build dependencies (including esbuild) must be installed.
+cmds = ["npx --yes --package=pnpm@11.19.0 pnpm install --frozen-lockfile --prod=false"]
+
+[phases.build]
+cmds = ["npm run build"]

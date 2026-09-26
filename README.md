@@ -1,10 +1,10 @@
 # Hushmark privacy integration
 
-The current product is a private-payment interface on Solana using Privacy Cash SDK 1.2.2. It replaces the public-transfer-first pages, not the underlying source history. No Hushmark token exists.
+The current product is a private-payment interface on Solana using Privacy Cash SDK 1.2.2. It replaces the public-transfer-first pages, not the underlying source history. HUSHM is the project token; the integrated private pool supports SOL and USDC only.
 
 ## Run
 
-Node 24+ and pnpm 11. `pnpm install --frozen-lockfile`, `pnpm build`, `pnpm start`. Local preview is http://127.0.0.1:4173.
+Node 24.x and pnpm 11.19.0. `pnpm install --frozen-lockfile`, `pnpm build`, `pnpm start`. Local preview is http://127.0.0.1:4173.
 
 Current page generator: generate-privacy.mjs. Browser source: src/privacy.js, src/privacy-sdk.js, src/privacy-guards.js. Build: build-privacy.mjs. The build copies the SDK's exact circuit2/transaction2.wasm and transaction2.zkey into dist/privacy-circuit and bundles the SDK locally. dist is tracked authored output, not a directory to delete. Old generators and public-transfer source are retained as history and are not the current build entrypoint.
 
@@ -19,7 +19,26 @@ Current page generator: generate-privacy.mjs. Browser source: src/privacy.js, sr
 - Actual genesis/program checks and distinct submitted/not-found/failed/finalized states.
 - No optimistic private balance, simulated balance, token sale or invented receipt.
 
+## Wallet tools (v4)
+
+- Download an encrypted history JSON file, preview its record counts, and merge it with the same wallet on another browser or domain. New restored transaction statuses require a fresh manual check. No history upload or backend is involved.
+- Idle auto-lock defaults to 5 minutes, with 15 and 30 minute choices. It also checks expiry on return to a background tab and before guarded actions. Already submitted transactions may still settle; uncertain activity is not labeled safely retryable.
+- Create SOL/USDC payment requests as links and downloadable QR images. The unsigned link exposes recipient, net amount and expiry to anyone with it. It never auto-connects or submits. The payer explicitly applies it and reviews gross debit/current fees; manual edits detach it.
+- Check selected mainnet RPC, executable protocol program and valid protocol fee configuration. This is point-in-time availability, not a security audit or settlement guarantee.
+
+Source modules: `src/private-activity.js`, `src/idle-session.js`, `src/payment-request.js`, `src/service-status.js`, `src/wallet-tools-view.js`. Current public navigation, CA controls and whitepaper are preserved in `templates/` and `dist/`. See `WALLET-TOOLS-HANDOFF.md` for deployment and acceptance steps.
+
 ## Privacy and recovery limits
+
+### Private activity history
+
+New deposit and withdrawal attempts initiated here are kept in an encrypted, wallet-scoped browser journal. It retains the latest 100 records, including atomic amounts, quoted fees, timestamps, lifecycle status, the transaction signature when available and a hash of the approved withdrawal proof. Recipient addresses, unlock signatures and private keys are never stored in this journal. There is no history backend or analytics upload.
+
+`src/private-activity.js` derives a separate nonextractable AES-256-GCM key with HKDF-SHA256 from the existing verified unlock signature, with owner-bound salt and domain-separated info. Every write uses a fresh 96-bit nonce and authenticated owner/schema data. Writes are serialized using Web Locks where available. Browser storage names expose the wallet address; stored content is encrypted, not the storage metadata. A compromised site/browser while unlocked remains outside this protection.
+
+Same-wallet unlock on the same site/browser recovers the journal without an additional signature prompt. Lock or account change discards the key and removes decrypted history and the latest transaction from the DOM. Hide history removes the list from the DOM. Explicit clear only removes that wallet's journal, not protocol note caches, recovery fingerprints or funds. History is not a backup of funds or private notes. Earlier transactions are not automatically scanned; encrypted activity backups can be restored with the same wallet on another browser or domain.
+
+Opening history performs no transaction-history RPC scan. Manual status refresh contacts the selected RPC, and opening an explorer is an explicit third-party navigation. Withdrawal finality (including a finalized failed receipt) requires matching the approved proof hash. An interrupted submission remains uncertain. Storage errors retain existing encrypted data and do not block wallet operations; users see that history may be incomplete. Corrupt records require an explicit local clear before new records can be saved.
 
 Deposit funding addresses/amounts and withdrawal recipients/amounts remain public. The protocol aims for unlinkability, not full transaction invisibility. Timing, matching amounts, address reuse and service metadata matter. The SDK queries note indices from the relayer; this reveals queried encrypted-note identifiers to that provider. There is no claim of affiliation, perfect anonymity or independent Hushmark audit.
 
@@ -33,7 +52,7 @@ Actual browser proof generation and SDK deposit transaction assembly passed with
 
 Browser withdrawal testing also passed authenticated note encryption/decryption, tamper rejection, private balance reconstruction, actual withdrawal proof generation and exact reviewed relay payload checks. Withdrawal submission and finality were intercepted fixtures as well.
 
-A funded mainnet deposit, recovery after reload and withdrawal through Hushmark remain UNVERIFIED. An independent security review is outstanding. Public RPC/relayer availability is not guaranteed. Do not infer a verified production launch from a mainnet setting.
+On 2026-09-24, the owner reported successful testing through Hushmark with real SOL and USDC. See VERIFICATION.md for the scope of that report and the separate automated test record. An independent security review is outstanding. Public RPC/relayer availability is not guaranteed.
 
 ## Sources
 
@@ -48,4 +67,4 @@ The bundled SDK includes third-party cryptographic components with their own lic
 
 ## Functional audit update (2026-09-22)
 
-See VERIFICATION.md for the current test record and repeat commands. SOL and USDC proof flows, synthetic-note recovery after reload, cancellation/account-change controls and mismatched withdrawal receipt rejection passed browser checks. The test relay and finality responses were fixtures; funded mainnet settlement remains unverified. Browser regression scripts are preserved in tests/browser and require a Playwright runtime.
+See VERIFICATION.md for the current test record and repeat commands. SOL and USDC proof flows, synthetic-note recovery after reload, cancellation/account-change controls and mismatched withdrawal receipt rejection passed browser checks. The relay and finality responses in those automated tests were fixtures. Browser regression scripts are preserved in tests/browser and require a Playwright runtime.
